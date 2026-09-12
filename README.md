@@ -81,6 +81,36 @@ I ran into a few problems throughout the project and had to troubleshoot them as
 
 Fixing these was a useful part of the project because I had to go back through my setup and figure out what was actually causing each problem.
 
+## Additional Testing and Validation
+
+After finishing the main setup, I did some additional testing to make sure the environment worked with more users and under different access levels.
+
+## PowerShell Automation
+
+I used PowerShell to automate user onboarding instead of creating every account manually. The script reads user information from a CSV, creates each account in the correct departmental OU, and adds the user to the matching security group. I tested the script by batch-provisioning 20 additional users across the domain.
+
+![Bulk user provisioning](screenshots/34Users.png)
+
+## DHCP and Network Configuration
+
+I configured DHCP so CLIENT-01 could receive its network configuration automatically. I also added a reservation for CLIENT-01 using its MAC address so it can receive a consistent IP address through DHCP.
+
+![CLIENT-01 DHCP reservation](screenshots/dhcpres.png)
+
+## User Access Testing
+
+I tested the environment using both administrator and standard domain accounts. Using a newly provisioned Engineering account, I confirmed that the user could log into the domain and only see the shared resources available to that department. I also tested administrative elevation and confirmed that the standard account required administrator credentials for elevated access.
+
+![Engineering user access test](screenshots/scooperpermissions.png)
+
+### Operational Availability Testing
+
+I also tested the availability of the lab during normal operation by running repeated connectivity checks between DC01 and CLIENT-01. This gave me a way to measure whether the client remained reachable while the environment was running and being tested.
+
+`1..1000 | ForEach-Object { Test-Connection -ComputerName CLIENT-01 -Count 1 -Quiet } | Group-Object | Select-Object Name,Count`
+
+During a 1,000-check operational test, CLIENT-01 responded successfully to 999 of 1,000 connectivity checks, resulting in 99.9% measured availability during the test.
+
 ## Skills Practiced
 
 - Active Directory Domain Services (AD DS)
