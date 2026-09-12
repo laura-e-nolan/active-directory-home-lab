@@ -105,9 +105,13 @@ I tested the environment using both administrator and standard domain accounts. 
 
 ### Operational Availability Testing
 
-I also tested the availability of the lab during normal operation by running repeated connectivity checks between DC01 and CLIENT-01. This gave me a way to measure whether the client remained reachable while the environment was running and being tested.
+I tested availability between DC01 and CLIENT-01 with PowerShell by running repeated `Test-Connection` checks at set intervals and recording whether each check succeeded or failed. This gave me a more meaningful way to measure whether the client stayed reachable over time while the lab was running.
 
-`1..1000 | ForEach-Object { Test-Connection -ComputerName CLIENT-01 -Count 1 -Quiet } | Group-Object | Select-Object Name,Count`
+The test records a timestamp for each check, stores the success or failure result, and calculates availability as:
+
+`successful checks ÷ total checks × 100`
+
+I used this to test the uptime of the home lab during operational testing.
 
 During a 1,000-check operational test, CLIENT-01 responded successfully to 999 of 1,000 connectivity checks, resulting in 99.9% measured availability during the test.
 
